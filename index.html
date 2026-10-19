@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f5ef">
+  <title>행운 번호 연구소 | 로또 번호 추천</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #19251f;
+      --muted: #81877f;
+      --green: #245c43;
+      --green-dark: #1a4834;
+      --paper: #f7f5ef;
+      --line: #e8e6de;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 50% 8%, rgba(227, 233, 216, .62), transparent 38%),
+        var(--paper);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    }
+
+    button { font: inherit; }
+
+    .page {
+      width: min(100% - 40px, 760px);
+      margin: 0 auto;
+      padding: 34px 0 28px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #5d685f;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .12em;
+    }
+
+    .brand { display: flex; align-items: center; gap: 9px; }
+    .brand-mark {
+      display: grid;
+      width: 27px;
+      height: 27px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--green);
+      color: white;
+      font-size: 14px;
+      letter-spacing: 0;
+    }
+
+    .status { display: flex; align-items: center; gap: 7px; letter-spacing: 0; font-weight: 500; }
+    .status::before {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #79a678;
+      content: "";
+    }
+
+    main { padding-top: 83px; text-align: center; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .15em;
+    }
+
+    .eyebrow span { color: #b5a875; }
+
+    h1 {
+      margin: 17px 0 13px;
+      font-size: clamp(37px, 7vw, 58px);
+      font-weight: 800;
+      letter-spacing: -.075em;
+      line-height: 1.15;
+    }
+
+    h1 em { color: var(--green); font-style: normal; }
+
+    .intro {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .ticket {
+      position: relative;
+      margin: 48px auto 0;
+      padding: 29px 32px 27px;
+      overflow: hidden;
+      border: 1px solid rgba(37, 72, 51, .08);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, .86);
+      box-shadow: 0 18px 50px rgba(40, 51, 39, .07), 0 2px 7px rgba(40, 51, 39, .03);
+    }
+
+    .ticket::before, .ticket::after {
+      position: absolute;
+      top: 50%;
+      width: 22px;
+      height: 22px;
+      border: 1px solid rgba(37, 72, 51, .08);
+      border-radius: 50%;
+      background: var(--paper);
+      content: "";
+      transform: translateY(-50%);
+    }
+    .ticket::before { left: -12px; }
+    .ticket::after { right: -12px; }
+
+    .ticket-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0 1px 27px;
+      color: #798078;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .ticket-heading strong { color: var(--green); font-size: 12px; }
+
+    .balls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: clamp(4px, 1.2vw, 9px);
+    }
+
+    .number-sets {
+      display: grid;
+      gap: 12px;
+    }
+
+    .number-set {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(6px, 2vw, 14px);
+    }
+
+    .set-label {
+      width: 39px;
+      flex: 0 0 39px;
+      color: #92968e;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .ball {
+      display: grid;
+      width: clamp(32px, 7.5vw, 46px);
+      aspect-ratio: 1;
+      place-items: center;
+      border-radius: 50%;
+      color: #342f23;
+      font-size: clamp(13px, 2.8vw, 17px);
+      font-weight: 800;
+      box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .09), 0 3px 8px rgba(29, 37, 29, .08);
+      animation: appear .35s both;
+    }
+
+    .ball:nth-child(2) { animation-delay: .04s; }
+    .ball:nth-child(3) { animation-delay: .08s; }
+    .ball:nth-child(4) { animation-delay: .12s; }
+    .ball:nth-child(5) { animation-delay: .16s; }
+    .ball:nth-child(6) { animation-delay: .20s; }
+    .ball-yellow { background: #f5cc54; }
+    .ball-blue { background: #78b9e8; }
+    .ball-red { background: #f07870; }
+    .ball-gray { background: #c6c9c4; }
+    .ball-green { background: #8acb8c; }
+
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(8px) scale(.9); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .ticket-foot {
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      margin-top: 22px;
+      color: #92968e;
+      font-size: 11px;
+    }
+    .ticket-foot span { color: #c4c7c0; }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 52px;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      border: 0;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      transition: transform .16s ease, background .16s ease, box-shadow .16s ease;
+    }
+    .button:hover { transform: translateY(-2px); }
+    .button:active { transform: translateY(0); }
+    .button:focus-visible { outline: 3px solid #d5b847; outline-offset: 3px; }
+
+    .button-primary {
+      min-width: 208px;
+      padding: 0 24px;
+      background: var(--green);
+      box-shadow: 0 7px 16px rgba(36, 92, 67, .19);
+      color: white;
+    }
+    .button-primary:hover { background: var(--green-dark); box-shadow: 0 9px 20px rgba(36, 92, 67, .25); }
+
+    .button-secondary {
+      min-width: 104px;
+      padding: 0 18px;
+      border: 1px solid #e5e3db;
+      background: rgba(255, 255, 255, .68);
+      color: #566057;
+    }
+    .button-secondary:hover { background: white; }
+    .button svg { width: 17px; height: 17px; }
+
+    .message {
+      min-height: 21px;
+      margin: 12px 0 0;
+      color: var(--green);
+      font-size: 12px;
+    }
+
+    .divider { width: 100%; height: 1px; margin: 48px 0 28px; background: var(--line); }
+    .notes {
+      display: flex;
+      justify-content: center;
+      gap: 34px;
+      color: #7c827a;
+      font-size: 12px;
+    }
+    .note { display: flex; align-items: center; gap: 8px; }
+    .note-icon {
+      display: grid;
+      width: 25px;
+      height: 25px;
+      place-items: center;
+      border-radius: 8px;
+      background: #eeeee7;
+      color: var(--green);
+      font-size: 13px;
+    }
+
+    footer { margin-top: 57px; color: #a1a49d; font-size: 11px; line-height: 1.8; text-align: center; }
+
+    @media (max-width: 520px) {
+      .page { width: min(100% - 32px, 760px); padding-top: 22px; }
+      main { padding-top: 65px; }
+      .ticket { margin-top: 36px; padding: 25px 19px 23px; }
+      .ticket-heading { margin-bottom: 23px; }
+      .number-set { gap: 4px; }
+      .set-label { width: 26px; flex-basis: 26px; }
+      .balls { gap: 3px; }
+      .ball { width: clamp(28px, 8vw, 36px); }
+      .actions { gap: 8px; }
+      .button-primary { min-width: 0; flex: 1; padding: 0 12px; }
+      .button-secondary { min-width: 94px; padding: 0 12px; }
+      .notes { flex-direction: column; align-items: center; gap: 13px; }
+      .divider { margin: 37px 0 23px; }
+      footer { margin-top: 42px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">✳</span> 행운 번호 연구소</div>
+      <div class="status">오늘의 행운 준비 완료</div>
+    </header>
+
+    <main>
+      <div class="eyebrow"><span>✦</span> YOUR LUCKY NUMBERS <span>✦</span></div>
+      <h1>오늘의 행운을<br><em>뽑아보세요</em></h1>
+      <p class="intro">버튼을 누르면 1부터 45까지,<br>행운의 로또 번호 6개씩 5세트를 추천해 드려요.</p>
+
+      <section class="ticket" aria-label="추천 로또 번호">
+        <div class="ticket-heading">
+          <span>LUCKY PICKS · 5 SETS</span>
+          <strong>제 6/45</strong>
+        </div>
+        <div class="number-sets" id="number-sets" aria-live="polite" aria-label="아직 추천 번호가 없습니다">
+          <div class="number-set"><span class="set-label">01</span><div class="balls"><span class="ball ball-yellow">?</span><span class="ball ball-blue">?</span><span class="ball ball-red">?</span><span class="ball ball-gray">?</span><span class="ball ball-green">?</span><span class="ball ball-yellow">?</span></div></div>
+          <div class="number-set"><span class="set-label">02</span><div class="balls"><span class="ball ball-yellow">?</span><span class="ball ball-blue">?</span><span class="ball ball-red">?</span><span class="ball ball-gray">?</span><span class="ball ball-green">?</span><span class="ball ball-yellow">?</span></div></div>
+          <div class="number-set"><span class="set-label">03</span><div class="balls"><span class="ball ball-yellow">?</span><span class="ball ball-blue">?</span><span class="ball ball-red">?</span><span class="ball ball-gray">?</span><span class="ball ball-green">?</span><span class="ball ball-yellow">?</span></div></div>
+          <div class="number-set"><span class="set-label">04</span><div class="balls"><span class="ball ball-yellow">?</span><span class="ball ball-blue">?</span><span class="ball ball-red">?</span><span class="ball ball-gray">?</span><span class="ball ball-green">?</span><span class="ball ball-yellow">?</span></div></div>
+          <div class="number-set"><span class="set-label">05</span><div class="balls"><span class="ball ball-yellow">?</span><span class="ball ball-blue">?</span><span class="ball ball-red">?</span><span class="ball ball-gray">?</span><span class="ball ball-green">?</span><span class="ball ball-yellow">?</span></div></div>
+        </div>
+        <div class="ticket-foot"><span>✦</span> 행운은 준비된 사람에게 찾아와요 <span>✦</span></div>
+      </section>
+
+      <div class="actions">
+        <button class="button button-primary" id="recommend" type="button">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.64 5.64l1.42 1.42m9.88 9.88 1.42 1.42m0-12.72-1.42 1.42m-9.88 9.88-1.42 1.42M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          행운 번호 추천받기
+        </button>
+        <button class="button button-secondary" id="copy" type="button" aria-label="추천 번호 복사">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" stroke="currentColor" stroke-width="1.7"/></svg>
+          번호 복사
+        </button>
+      </div>
+      <p class="message" id="message" role="status" aria-live="polite"></p>
+
+      <div class="divider"></div>
+      <div class="notes">
+        <div class="note"><span class="note-icon" aria-hidden="true">↗</span> 매번 새롭게 뽑는 랜덤 번호</div>
+        <div class="note"><span class="note-icon" aria-hidden="true">♡</span> 재미로만 즐겨주세요</div>
+      </div>
+    </main>
+
+    <footer>본 서비스는 재미를 위한 번호 추천 서비스이며, 당첨을 보장하지 않습니다.<br>무리한 구매는 삼가고 건전한 복권 문화를 함께해요.</footer>
+  </div>
+
+  <script>
+    const numberSets = document.querySelector("#number-sets");
+    const message = document.querySelector("#message");
+    let recommendedNumbers = [];
+
+    function recommendNumbers() {
+      recommendedNumbers = Array.from({ length: 5 }, () => {
+        const pool = Array.from({ length: 45 }, (_, index) => index + 1);
+        for (let index = pool.length - 1; index > 0; index -= 1) {
+          const swapIndex = Math.floor(Math.random() * (index + 1));
+          [pool[index], pool[swapIndex]] = [pool[swapIndex], pool[index]];
+        }
+        return pool.slice(0, 6).sort((a, b) => a - b);
+      });
+      numberSets.replaceChildren(...recommendedNumbers.map((numbers, index) => {
+        const row = document.createElement("div");
+        row.className = "number-set";
+        const label = document.createElement("span");
+        label.className = "set-label";
+        label.textContent = String(index + 1).padStart(2, "0");
+        const balls = document.createElement("div");
+        balls.className = "balls";
+        balls.setAttribute("aria-label", `${index + 1}번 조합: ${numbers.join(", ")}`);
+        balls.append(...numbers.map((number) => {
+          const ball = document.createElement("span");
+          ball.className = `ball ${getBallColor(number)}`;
+          ball.textContent = String(number);
+          return ball;
+        }));
+        row.append(label, balls);
+        return row;
+      }));
+      numberSets.setAttribute("aria-label", `추천 번호 5세트: ${recommendedNumbers.map((numbers) => numbers.join(", ")).join("; ")}`);
+      message.textContent = "새로운 행운 번호 5세트가 도착했어요!";
+    }
+
+    function getBallColor(number) {
+      if (number <= 10) return "ball-yellow";
+      if (number <= 20) return "ball-blue";
+      if (number <= 30) return "ball-red";
+      if (number <= 40) return "ball-gray";
+      return "ball-green";
+    }
+
+    async function copyNumbers() {
+      if (recommendedNumbers.length === 0) {
+        message.textContent = "먼저 행운 번호를 추천받아 주세요.";
+        return;
+      }
+      try {
+        const text = recommendedNumbers.map((numbers, index) => `${index + 1}세트: ${numbers.join(", ")}`).join("\n");
+        await navigator.clipboard.writeText(text);
+        message.textContent = "추천 번호 5세트를 클립보드에 복사했어요.";
+      } catch (error) {
+        message.textContent = "복사할 수 없어요. 번호를 직접 선택해 주세요.";
+      }
+    }
+
+    document.querySelector("#recommend").addEventListener("click", recommendNumbers);
+    document.querySelector("#copy").addEventListener("click", copyNumbers);
+  </script>
+</body>
+</html>
